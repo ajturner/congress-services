@@ -1,0 +1,15 @@
+{
+  "name": "congress-where",
+  "version": "0.0.0",
+  "description": "",
+  "main": "run.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "BSD-2-Clause",
+  "devDependencies": {
+    "gulp-react": "~2.0.0",
+    "gulp": "~3.8.10"
+  }
+}
