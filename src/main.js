@@ -23,6 +23,9 @@ require([
     console.log("Map Title", response.itemInfo.item.title);
     map = response.map;
     InfoListContainer.addContainer(response.itemInfo.itemData.operationalLayers);
+    map.on('load', function() {
+      LocatorContainer.addContainer(map);
+    });    
   });
   // var map = new Map('dcmap', {
   //   basemap: 'topo',
@@ -30,7 +33,5 @@ require([
   //   zoom: 13
   // });
 
-  // map.on('load', function() {
-  //   LocatorContainer.addContainer(map);
-  // });
+
 });
