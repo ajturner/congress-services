@@ -60,10 +60,12 @@ define([
     },
     // [-114,44]
     render: function() {
+      var title = this.props.item.title.replace(/[&\s]+/g,'').toLowerCase();
+      title += " legend";
       return (
         <div className="grid-stack-item">
           <div className="grid-stack-item-content">
-            <h3>{this.props.item.title}</h3>
+            <h3 className={title}>{this.props.item.title}</h3>
             <p dangerouslySetInnerHTML={this.getContent()}></p>                
           </div>
         </div>        
