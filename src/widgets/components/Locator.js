@@ -13,7 +13,10 @@ define([
 
     componentDidMount: function() {
       this.props.map.on('mouse-move', function(e) {
-        this.update(e.mapPoint);
+        this.update({
+          x: e.mapPoint.getLatitude(), 
+          y: e.mapPoint.getLongitude()
+        });
       }.bind(this));
     },
 

@@ -11,8 +11,8 @@ define([
   InfoList
 ) {
 
-  var addContainer = function(items) {
-    React.render(<InfoList items={items} />, dom.byId('info'));
+  var addContainer = function(map,items) {
+    React.render(<InfoList map={map} items={items} />, dom.byId('info'));
   };
 
   return {

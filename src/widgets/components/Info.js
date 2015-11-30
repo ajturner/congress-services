@@ -1,20 +1,72 @@
 /** @jsx React.DOM */
 define([
-  'react'
-], function(React) {
+  'react',
+  "esri/tasks/query", "esri/tasks/QueryTask",
+  "esri/geometry/Geometry",
+  "esri/geometry/Extent"
+], function(React, Query, QueryTask, Geometry, Extent) {
 
   var InfoWidget = React.createClass({
     getInitialState: function() {
-      return {};
+      return {content: "none", count: 0};
     },
+    loadInfoFromServer: function(geometry) {
 
+      var queryTask = new QueryTask(this.props.item.url);
+      var query = new Query();
+      query.returnGeometry = false;
+      query.outFields = ['*'];
+      query.where = "1=1";
+      query.num = 4;
+
+      if(geometry !== undefined && geometry !== null) {
+        query.geometry = geometry;
+      }
+
+      var self = this;
+      queryTask.execute(query, function(result) {
+        if(result.features.length >0) {
+          var content = result.features[0].attributes;
+          if(self.props.item.popupInfo.description !== null && self.props.item.popupInfo.description !== undefined) {
+            content = self.props.item.popupInfo.description.supplant(result.features[0].attributes);
+          }
+        } else {
+          content = "None nearby.";
+        }
+        self.setState({content: content, count: result.features.length});
+      });
+
+    },  
+    componentDidMount: function() {
+      this.loadInfoFromServer();
+      var el = $(this.getDOMNode());
+      var grid = $('.grid-stack').data('gridstack');
+
+      grid.add_widget(el, 0, 0, 4, 3, true);
+
+      var self = this;
+      this.props.map.on("pan-end", function(e) {
+        var extent = new esri.geometry.Extent(e.extent);
+        self.loadInfoFromServer(extent);
+      });
+
+      this.props.map.on("zoom-end", function(e) {
+        var extent = new esri.geometry.Extent(e.extent);
+        self.loadInfoFromServer(extent);
+      });
+    },
+    getContent: function() {
+      return { __html: this.state.content };
+    },
+    // [-114,44]
     render: function() {
-      console.log("State check", this.props)   
       return (
-        <div className='well'>
-          <h2>{this.props.item.title}</h2>
-          <p>{this.props.item.url}</p>
-        </div>
+        <div className="grid-stack-item">
+          <div className="grid-stack-item-content">
+            <h3>{this.props.item.title}</h3>
+            <p dangerouslySetInnerHTML={this.getContent()}></p>                
+          </div>
+        </div>        
       );
     }
   });
